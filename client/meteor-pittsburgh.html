@@ -1,0 +1,100 @@
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+</head>
+
+<body>
+	<header>
+		<h1 class="brand"><div class="logo"></div><span id="group-name"></span></h1>
+	</header>
+	<section id="upcoming-events">
+		{{> upcomingMeetup }}
+	</section>
+	<section id="sponsors">
+		{{> sponsors }}
+	</section>
+	<section id="previous-events">
+		{{> previousMeetup }}
+	</section>	
+	<section>
+		{{> members}}
+	</section>
+	<footer>
+		<a id="gh" href="https://github.com/ctrimm/meteor-pittsburgh" title="GitHub"><img src="GitHub-Mark-32px.png" alt="GitHub logo"/></a>
+		<a class='logo' href="http://meteor.com"></a>
+	</footer>
+</body>
+
+<template name="upcomingMeetup">
+	{{#each events}}
+	<div class="block loading">
+		<h2>{{name}}</h2>
+		<p>
+			<time title="{{calandarFormat time}}" datetime="{{isoFormat time}}">{{dateTimeFormat time}}</time>
+			<span>- {{#if venue}}at: <a href="https://maps.google.com/?q={{venue.address_1}},{{venue.city}}">{{venue.name}}</a>
+				    {{else}}Venue TBC
+				    {{/if}}
+			</span>
+			<span>- {{yes_rsvp_count}} attendee{{#if yes_rsvp_count}}s{{/if}}</span>
+		</p>
+		{{{createMap venue}}}
+		<div class="description">{{{description}}}</div>
+		<div class="countdown" title="{{calandarFormat time}}">{{fromNowFormat time}}</div>
+		<a class="meetup" href={{event_url}}></a>
+	</div>
+	{{/each}}
+</template>
+
+<template name="sponsors">
+	{{#if sponsors.length}}
+	<div class="block loading">
+		<h3>Sponsored by</h3>
+		{{#each sponsors}}
+		<div class="sponsor">
+			<a class="photo" href="{{url}}"><img src="{{image_url}}" alt="" title="{{details}}"></a>
+		</div>
+		{{/each}}
+	</div>
+	{{/if}}
+</template>
+
+<template name="previousMeetup">
+	{{#if events.length}}
+	<div class="block loading">
+		<h3>{{events.length}} Past Events</h3>
+		{{> photos}}
+		<ul>
+			{{#each events}}
+			<li>
+				<div class="time">{{dateFormat time}} - {{yes_rsvp_count}} attended {{#if rating.count}}-  {{toFixed rating.average}} stars{{/if}}</div>
+				<a class="name" href="{{event_url}}">{{name}}</a>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
+	{{/if}}
+</template>
+
+<template name="photos">
+	{{#each photos}}
+	<a class="photo" href="{{highres_link}}"><img src="{{thumb_link}}" alt="" title="{{member.name}}"></a>
+	{{/each}}
+</template>
+
+<template name="members">
+	{{#if members.length}}
+	<div class="block loading">
+		<h3>{{members.length}} Meteorites</h3>
+		<div id="members-graph">
+			<svg></svg>
+		</div>
+		{{#each members}}
+		<a title="{{name}}" class="photo member" href="{{#if other_services.twitter.identifier}}https://twitter.com/{{other_services.twitter.identifier}}{{else}}{{link}}{{/if}}">
+			{{#if photo.thumb_link}}<img src="{{photo.thumb_link}}">{{/if}}
+		</a>
+		{{/each}}
+	</div>
+	{{/if}}
+</template>
