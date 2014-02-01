@@ -30,6 +30,10 @@ var meetup = {
         this.get(this.api + '/2/members', opts, cb);
     },
 
+    discussions: function discussions(opts, cb){
+        this.get(this.api + '/discussions', opts, cb);
+    },
+
     get: function get(url, opts, cb){
         if(!opts){ 
             opts = {}; 
@@ -127,6 +131,7 @@ Meteor.startup(function(){
         console.error('The settings data is invalid. Please pass a settings file on startup.');
         console.error('\n  meteor --settings settings.json\n' );
         console.error('More info here: https://github.com/olizilla/meteor-london/blob/master/README.md');
+        console.error('This version has been tweaked for Meteor Pittsburgh');
 
         return;
     }
